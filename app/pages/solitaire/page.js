@@ -29,6 +29,14 @@ let cardnumber = [
   "Q",
   "K",
 ];
+function shuffleArray(arr, startpoint = 0) {
+  for (let i = arr.length - 1; i > startpoint; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    if (arr[i]?.data?.cardtype && arr[j]?.data?.cardtype)
+      [arr[i], arr[j]] = [arr[j], arr[i]]; // swap
+  }
+  return arr;
+}
 
 export default function GameCanvas() {
   const containerRef = useRef(null);
@@ -220,6 +228,8 @@ export default function GameCanvas() {
           });
         }
       }
+      console.log(decContainer.children, "decContainer.children");
+      shuffleArray(decContainer.children, 2);
 
       containerRef.current.appendChild(app.canvas);
     };
