@@ -89,11 +89,9 @@ export default function GameCanvas() {
         block1Container.eventMode = "static";
         block1Container.on("pointerdown", () => {
           if (activeCard?.children[0]) {
-            activeCard.targetfound = true;
-            activeCard.y = (block1Container.children.length - 1) * 30;
             console.log(activeCard, "activeCard");
             if (activeCard.data.cardtype !== iconindex) {
-              alert(`"Wrong type", ${cardtype[iconindex]}`);
+              alert(`"Expected type", ${cardtype[iconindex]}`);
               return;
             } else if (
               activeCard.data.numindex !==
@@ -109,6 +107,8 @@ export default function GameCanvas() {
               );
               return;
             }
+            activeCard.targetfound = true;
+            activeCard.y = (block1Container.children.length - 1) * 30;
             if (activeCard.children[0]) activeCard.children[0].clear();
             activeCard.children[0]
               .roundRect(0, 0, 100, 130, 10)
