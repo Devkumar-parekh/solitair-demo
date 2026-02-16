@@ -81,7 +81,7 @@ export default function GameCanvas() {
           console.log("active", activeCard);
           if (activeCard) {
             activeCard.targetfound = true;
-            activeCard.y = (block1Container.children.length - 1) * 30 + 15;
+            activeCard.y = (block1Container.children.length - 1) * 30;
 
             block1Container.addChild(activeCard);
 
