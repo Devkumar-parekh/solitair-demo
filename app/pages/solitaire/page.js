@@ -64,28 +64,65 @@ export default function GameCanvas() {
 
       const topContainer = new Container();
 
-      const createBlock = (x = 0, y = 0) => {
+      const createBlock = (x = 0, y = 0, icon) => {
         const block1 = new Graphics()
           .roundRect(x, y, 100, 130, 10)
+
           .fill("#00ff0033")
           .stroke({ width: 3, color: "#ffff90" });
+
+        const text = new Text({
+          text: icon,
+          style: { fontSize: 45, fill: "black", align: "center" },
+        });
+        text.anchor.set(0.5);
+        text.x = block1.width / 2;
+        text.y = block1.height / 2;
+        block1.addChild(text);
         return block1;
       };
 
-      const createBlockContainer = () => {
+      const createBlockContainer = (iconindex = "") => {
         const block1Container = new Container();
         app.stage.addChild(block1Container);
-        const block1 = createBlock(0);
+        const block1 = createBlock(0, 0, cardtype[iconindex]);
         block1Container.eventMode = "static";
         block1Container.on("pointerdown", () => {
-          console.log("active", activeCard);
-          if (activeCard) {
+          if (activeCard?.children[0]) {
             activeCard.targetfound = true;
             activeCard.y = (block1Container.children.length - 1) * 30;
+            console.log(activeCard, "activeCard");
+            if (activeCard.data.cardtype !== iconindex) {
+              alert(`"Wrong type", ${cardtype[iconindex]}`);
+              return;
+            } else if (
+              activeCard.data.numindex !==
+              block1Container.children?.length - 1
+            ) {
+              console.log(
+                activeCard.data.numindex,
+                block1Container.children?.length,
+              );
 
+              alert(
+                `"Expected card", ${cardnumber[block1Container.children?.length - 1]}`,
+              );
+              return;
+            }
+            if (activeCard.children[0]) activeCard.children[0].clear();
+            activeCard.children[0]
+              .roundRect(0, 0, 100, 130, 10)
+              .fill("white")
+              .stroke({ width: 1, color: "black" });
             block1Container.addChild(activeCard);
-
             activeCard = null;
+            if (decTargetContainer.children.length)
+              activeCard =
+                decTargetContainer.children.length - 1 > 0
+                  ? decTargetContainer.children[
+                      decTargetContainer.children.length - 1
+                    ]
+                  : null;
           }
         });
         block1Container.addChild(block1);
@@ -94,10 +131,10 @@ export default function GameCanvas() {
 
         topContainer.addChild(block1Container);
       };
-      createBlockContainer();
-      createBlockContainer();
-      createBlockContainer();
-      createBlockContainer();
+      createBlockContainer(0);
+      createBlockContainer(1);
+      createBlockContainer(2);
+      createBlockContainer(3);
 
       topContainer.x = app.screen.width - topContainer.width - 10;
       topContainer.y = 30;
@@ -106,6 +143,15 @@ export default function GameCanvas() {
       const decContainer = new Container();
 
       const decblock = createBlock(0);
+      decblock.eventMode = "static";
+
+      decblock.on("pointerdown", () => {
+        if (decContainer.children.length === 1) {
+          for (let i = decTargetContainer.children.length - 1; i >= 1; i--) {
+            decContainer.addChild(decTargetContainer.children[i]);
+          }
+        }
+      });
       decContainer.addChild(decblock);
       decContainer.x = 10;
       decContainer.y = 30;
@@ -119,48 +165,60 @@ export default function GameCanvas() {
       decTargetContainer.y = 30;
       app.stage.addChild(decTargetContainer);
 
-      for (let i = 0; i < 13; i++) {
-        const cardWrapper = new Container();
-        const card = new Graphics()
-          .roundRect(0, 0, 100, 130, 10)
-          .fill("white")
-          .stroke({ width: 1, color: "#123" });
+      for (let cardtypeindex = 0; cardtypeindex < 4; cardtypeindex++) {
+        for (let i = 0; i < 13; i++) {
+          const cardWrapper = new Container();
+          const card = new Graphics()
+            .roundRect(0, 0, 100, 130, 10)
+            .fill("white")
+            .stroke({ width: 1, color: "#123" });
 
-        const num = i; //Math.floor(Math.random() * 13);
-        const typeIndex = Math.floor(Math.random() * 4);
-        const text = new Text({
-          text: `${cardnumber[num]} ${cardtype[typeIndex]}`,
-          style: { fontSize: 22, fill: "black", align: "center" },
-        });
+          const num = i; //Math.floor(Math.random() * 13);
+          const typeIndex = cardtypeindex; //Math.floor(Math.random() * 4);
+          const text = new Text({
+            text: `${cardnumber[num]} ${cardtype[typeIndex]}`,
+            style: { fontSize: 22, fill: "black", align: "center" },
+          });
 
-        const textIcon = new Text({
-          text: `${cardtype[typeIndex]}`,
-          style: { fontSize: 35, fill: "black", align: "center" },
-        });
-        text.anchor.set(0.5);
-        text.x = 35;
-        text.y = 20;
+          const textIcon = new Text({
+            text: `${cardtype[typeIndex]}`,
+            style: { fontSize: 35, fill: "black", align: "center" },
+          });
+          text.anchor.set(0.5);
+          text.x = 35;
+          text.y = 20;
 
-        cardWrapper.addChild(card);
-        cardWrapper.addChild(text);
+          cardWrapper.addChild(card);
+          cardWrapper.addChild(text);
 
-        textIcon.anchor.set(0.5);
-        textIcon.x = cardWrapper.width / 2;
-        textIcon.y = cardWrapper.height / 2;
-        cardWrapper.addChild(textIcon);
+          textIcon.anchor.set(0.5);
+          textIcon.x = cardWrapper.width / 2;
+          textIcon.y = cardWrapper.height / 2;
+          cardWrapper.addChild(textIcon);
 
-        cardWrapper.eventMode = "static";
-        cardWrapper.cursor = "pointer";
+          cardWrapper.eventMode = "static";
+          cardWrapper.cursor = "pointer";
 
-        decContainer.addChild(cardWrapper);
-        cardWrapper.on("pointerdown", () => {
-          // cardWrapper.x = 150;
-          if (cardWrapper.targetfound) return;
+          cardWrapper.data = {
+            cardtype: typeIndex,
+            numindex: num,
+          };
 
-          decTargetContainer.addChild(cardWrapper);
-          console.log("active");
-          activeCard = cardWrapper;
-        });
+          decContainer.addChild(cardWrapper);
+          cardWrapper.on("pointerdown", () => {
+            if (cardWrapper.targetfound) return;
+
+            card.clear();
+            card
+              .roundRect(0, 0, 100, 130, 10)
+              .fill("white")
+              .stroke({ width: 1, color: "red" });
+
+            decTargetContainer.addChild(cardWrapper);
+            console.log("active");
+            activeCard = cardWrapper;
+          });
+        }
       }
 
       containerRef.current.appendChild(app.canvas);

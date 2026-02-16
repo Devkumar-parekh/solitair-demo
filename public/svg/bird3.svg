@@ -1,0 +1,32 @@
+<svg width="320" height="220" viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bodyGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6EC1FF"/>
+      <stop offset="100%" stop-color="#1E88E5"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Body -->
+  <ellipse cx="160" cy="120" rx="70" ry="45" fill="url(#bodyGradient)"/>
+
+  <!-- Wing (Up Position) -->
+  <path d="M155 105
+           C130 40, 85 35, 110 95
+           C130 80, 145 95, 155 105 Z"
+        fill="#1565C0"/>
+
+  <!-- Head -->
+  <circle cx="230" cy="90" r="30" fill="#42A5F5"/>
+
+  <!-- Beak -->
+  <polygon points="260,90 295,78 295,102"
+           fill="#FB8C00"/>
+
+  <!-- Tail -->
+  <polygon points="90,120 50,100 50,140"
+           fill="#1976D2"/>
+
+  <!-- Eye -->
+  <circle cx="240" cy="85" r="6" fill="#FFEB3B"/>
+  <circle cx="242" cy="87" r="3" fill="black"/>
+</svg>

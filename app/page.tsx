@@ -11,6 +11,9 @@ export default function Home() {
       <div className="block mb-4 hover:text-gray-300">
         <Link href={"/pages/solitaire"}>Solitaire</Link>
       </div>
+      <div className="block mb-4 hover:text-gray-300">
+        <Link href={"/pages/solitaire"}>Tappy Bird</Link>
+      </div>
 
       </div>
     </div>

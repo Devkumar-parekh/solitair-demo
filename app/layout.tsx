@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Solitair Demo",
+  title: "Solitaire Demo",
   description: "Made by DP",
 };
 
